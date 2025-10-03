@@ -1,0 +1,85 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:ToDoJo.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="550"
+             Width="800" Height="550"
+             x:Class="ToDoJo.Views.ProfileView"
+             x:DataType="vm:ProfileViewModel">
+	
+	<Design.DataContext>
+		<vm:ProfileViewModel/>
+	</Design.DataContext>
+
+
+	<SplitView IsPaneOpen="{Binding IsPaneOpen}"
+			   OpenPaneLength="200"
+			   CompactPaneLength="50"
+			   DisplayMode="CompactInline"
+			   PaneBackground="#0F1D28"
+			   Background="#0F1D28">
+
+		<SplitView.Pane>
+			<Grid RowDefinitions="*,100">
+				<StackPanel Grid.Row="0" Spacing="5" Margin="5">
+					<Button Command="{Binding OpenPaneCommand}"
+							HorizontalAlignment="Right">
+						<Image Source="/Assets/SplitView.png" Height="16" Width="16"/>
+					</Button>
+
+					<Button HorizontalAlignment="Center"
+							HorizontalContentAlignment="Center"
+							Content="Task"
+							Background="#182F3A"
+							Foreground="White"
+							Width="150"
+							Margin="20"
+							Command="{Binding NavigateToTaskCommand}"/>
+
+					<Button HorizontalAlignment="Center"
+							HorizontalContentAlignment="Center"
+							Content="Samurai"
+							Background="#182F3A"
+							Foreground="White"
+							Width="150"
+							Margin="20"
+							Command="{Binding NavigateToSamuraiCommand}"/>
+
+					<Button HorizontalAlignment="Center"
+							HorizontalContentAlignment="Center"
+							Content="Profile"
+							Background="#182F3A"
+							Foreground="White"
+							Width="150"
+							Margin="20"
+							Command="{Binding NavigateToProfileCommand}"/>
+				</StackPanel>
+
+				<StackPanel Grid.Row="1" Orientation="Horizontal">
+					<Button HorizontalAlignment="Left">
+						<Image Source="/Assets/settings.png"
+							   Height="16" Width="16"/>
+					</Button>
+					<Button HorizontalAlignment="Left"
+							HorizontalContentAlignment="Center"
+							Content="Log Out"
+							Width="120"
+							Command="{Binding LogOutCommand}"/>
+				</StackPanel>
+			</Grid>
+		</SplitView.Pane>
+
+		<SplitView.Content>
+			<!-- Оборачиваем несколько элементов в Grid (или StackPanel) -->
+			<Grid>
+				<!-- Этот Border можно использовать как фон/панель -->
+				<Border CornerRadius="10,0,0,10" Background="#182F3A" />
+
+				<!-- Контент поверх бордера -->
+				<TextBlock Text="Profile!" Margin="16" VerticalAlignment="Top" />
+			</Grid>
+		</SplitView.Content>
+
+	</SplitView>
+</UserControl>

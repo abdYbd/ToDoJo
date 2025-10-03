@@ -1,0 +1,87 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:ToDoJo.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="550"
+			 Width="400" Height="550"
+             x:Class="ToDoJo.Views.RegisterView"
+			 x:DataType="vm:RegisterViewModel"
+			 x:CompileBindings="True">
+
+	<Design.DataContext>
+		<vm:RegisterViewModel/>
+	</Design.DataContext>
+
+
+
+	<Border Background="#0F1D28"
+			CornerRadius="8"
+			MaxWidth="400"
+			Padding="10">
+		<StackPanel Spacing="5">
+			<TextBlock
+				FontSize="28"
+				FontWeight="Bold"
+				HorizontalAlignment="Center"
+				Text="Register"/>
+
+			<!--Login-->
+			<StackPanel>
+				<TextBlock Text="Login" FontWeight="SemiBold"/>
+				<TextBox Watermark="Enter you login" Padding="8"
+						 Text="{Binding Login}"/>
+			</StackPanel>
+
+			<!--Email-->
+			<StackPanel>
+				<TextBlock Text="Email" FontWeight="SemiBold"/>
+				<TextBox Watermark="Enter you email" Padding="8"
+						 Text="{Binding Email}"/>
+			</StackPanel>
+
+			<!--Password-->
+			<StackPanel>
+				<TextBlock Text="Password" FontWeight="SemiBold"/>
+				<TextBox Watermark="Enter you password" Padding="8" PasswordChar="*"
+						 Text="{Binding Password}"/>
+			</StackPanel>
+
+			<!--Confirm Password-->
+			<StackPanel>
+				<TextBlock Text="Confirm Password" FontWeight="SemiBold"/>
+				<TextBox Watermark="Enter you password" Padding="8" PasswordChar="*"
+						 Text="{Binding ConfirmPassword}"/>
+			</StackPanel>
+			<!--Error message-->
+			<TextBlock FontSize="12" Foreground="#7C1C1C" 
+					   Text="{Binding ErrorMessage}" TextWrapping ="Wrap"/>
+
+			<!--Login Button-->
+			<Button Content="Register" 
+					HorizontalAlignment="Center" 
+					Background="#182F3A"
+					Foreground="#355963"
+					Width="100"
+					HorizontalContentAlignment="Center"
+					Command="{Binding RegisterCommand}"/>
+
+			<!--Progress Bar-->
+			<ProgressBar Height="4"
+						 IsIndeterminate="True"
+						 IsVisible="{Binding IsLoading}"/>
+
+			<!--Register Button-->
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="Have you an account?"
+						   Foreground="#355963"/>
+			</StackPanel>
+			<Button Content="Login here" 
+					Background="Transparent" 
+					Foreground="#355963" 
+					HorizontalAlignment="Center"
+					Command="{Binding NavigateToLoginCommand}"/>
+		</StackPanel>
+	</Border>
+
+</UserControl>

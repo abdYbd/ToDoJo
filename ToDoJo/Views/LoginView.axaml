@@ -1,0 +1,116 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:ToDoJo.ViewModels"
+             mc:Ignorable="d"
+             d:DesignWidth="400"
+             d:DesignHeight="550"
+             Width="400"
+             Height="550"
+			 x:CompileBindings="True"
+             x:Class="ToDoJo.Views.LoginView"
+			 x:DataType="vm:LoginViewModel">
+
+	<Design.DataContext>
+		<vm:LoginViewModel/>
+	</Design.DataContext>
+
+
+	<Border Background="#0F1D28"
+			CornerRadius="8"
+			MaxWidth="400"
+			Padding="10">
+		<StackPanel Spacing="5">
+			<TextBlock
+				FontSize="28"
+				FontWeight="Bold"
+				HorizontalAlignment="Center"
+				Text="Login"/>
+
+			<!--Email-->
+			<StackPanel>
+				<TextBlock Text="Email" FontWeight="SemiBold"/>
+				<TextBox Watermark="Enter you email"
+						 Padding="8"
+						 Text="{Binding Email}"/>
+			</StackPanel>
+
+			<!--Password-->
+			<StackPanel>
+				<!--Password hide-->
+				<TextBlock Text="Password" FontWeight="SemiBold"/>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+				
+					<TextBox Grid.Column="0"
+							 Watermark="Enter your password"
+							 Padding="8"
+							 PasswordChar="*"
+							 Text="{Binding Password}"
+							 IsVisible="{Binding !IsPasswordVisible}"/>
+					<!--Password show-->
+					<TextBox Grid.Column="0"
+								 Watermark="Enter your password"
+								 Padding="8"
+								 Text="{Binding Password}"
+								 IsVisible="{Binding IsPasswordVisible}"/>
+
+					<Button Grid.Column="1"
+						   Background="Transparent"
+						   BorderThickness="0"
+						   Padding="8,0"
+						   Command="{Binding TogglePasswordVisibilityCommand}">
+						<Grid>
+							<!-- Иконка показа пароля -->
+							<Image Source="/Assets/ShowPassword.png"
+                                   Width="20" Height="20"
+                                   IsVisible="{Binding !IsPasswordVisible}"/>
+
+							<!-- Иконка скрытия пароля -->
+							<Image Source="/Assets/HidePassword.png"
+                                   Width="20" Height="20"
+                                   IsVisible="{Binding IsPasswordVisible}"/>
+						</Grid>
+					</Button>
+				</Grid>
+			</StackPanel>
+			<!--Error message-->
+			<TextBlock FontSize="12"
+					   Foreground="#7C1C1C"
+					   IsVisible="{Binding ErrorMessage, 
+					   Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+					   Text="{Binding ErrorMessage}"
+					   TextWrapping ="Wrap"/>
+
+			<!--Login Button-->
+			<Button Content="Login"
+					HorizontalAlignment="Center"
+					Background="#182F3A"
+					Foreground="#355963"
+					Width="100"
+					HorizontalContentAlignment="Center"
+					Command="{Binding LoginCommand}"/>
+
+			<!--Progress Bar-->
+			<ProgressBar Height="4"
+						 IsIndeterminate="True"
+						 IsVisible="{Binding IsLoading}"/>
+
+			<!--Register Button-->
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="Do you want create account?"
+						   Foreground="#355963"/>
+			</StackPanel>
+			<Button Content="Create Acc"
+					Background="Transparent"
+					Foreground="#355963"
+					HorizontalAlignment="Center"
+					Command="{Binding NavigateToRegisterCommand}"/>
+		</StackPanel>
+	</Border>
+
+</UserControl>

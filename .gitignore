@@ -1,0 +1,67 @@
+# =========================
+# C# / .NET / Avalonia
+# =========================
+
+# Binaries
+bin/
+obj/
+Debug/
+Release/
+
+# Visual Studio
+*.user
+*.suo
+*.vs/
+*.vscode/
+
+# Rider / JetBrains
+.idea/
+*.iml
+
+# Logs
+*.log
+*.tlog
+
+# Temporary files
+*.temp
+*.tmp
+*.swp
+*.lock
+
+# =========================
+# Databases / sensitive
+# =========================
+
+# app settings
+appsettings.json
+*.config
+
+# MySQL / SQLite / other local DB files
+*.sql
+*.sqlite
+*.db
+
+# =========================
+# OS / IDE
+# =========================
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# =========================
+# Other
+# =========================
+
+# Avalonia generated
+*.g.cs
+*.g.i.cs
