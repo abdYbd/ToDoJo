@@ -17,6 +17,7 @@ namespace ToDoJo.ViewModels
 
         private readonly INavigationService _navigationService;
         private readonly IAuthenticationService _authenticationService;
+        private readonly ILoggerService _loggerService;
 
         [RelayCommand]
         private void OpenPane()
@@ -24,13 +25,14 @@ namespace ToDoJo.ViewModels
             IsPaneOpen = !IsPaneOpen;
         }
 
-        public NavigateForViewModel(INavigationService navigationService, IAuthenticationService authenticationService)
+        public NavigateForViewModel(INavigationService navigationService, IAuthenticationService authenticationService, ILoggerService loggerService)
         {
             _navigationService = navigationService;
             _authenticationService = authenticationService;
+            _loggerService = loggerService;
         }
 
-        public NavigateForViewModel() : this(null!, null!) { }
+        public NavigateForViewModel() : this(null!, null!, null!) { }
 
         [RelayCommand]
         private async Task NavigateToTask() => await _navigationService.NavigateTo<ToDoViewModel>();

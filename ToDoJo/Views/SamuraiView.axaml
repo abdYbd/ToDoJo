@@ -85,10 +85,10 @@
                             HorizontalAlignment="Center"
                             Background="Transparent">
 						<Image Source="{Binding CurrentFrame}"
-       Width="180" Height="180"
-       HorizontalAlignment="Center"
-       VerticalAlignment="Center"
-       RenderOptions.BitmapInterpolationMode="None"/>
+                               Width="180" Height="180"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               RenderOptions.BitmapInterpolationMode="None"/>
 					</Border>
 
 					<!-- Coming Soon секция -->

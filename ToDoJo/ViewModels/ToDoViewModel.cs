@@ -17,12 +17,14 @@ namespace ToDoJo.ViewModels
     {
         private readonly AppDBContext _context;
         private readonly IAuthenticationService _authenticationService;
+        private readonly ILoggerService _logger;
 
 
-        public ToDoViewModel(INavigationService navigationService, IAuthenticationService authenticationService, AppDBContext context)
-            : base(navigationService, authenticationService) { 
+        public ToDoViewModel(INavigationService navigationService, IAuthenticationService authenticationService, AppDBContext context, ILoggerService logger)
+            : base(navigationService, authenticationService, logger) { 
             _context = context;
             _authenticationService = authenticationService;
+            _logger = logger;
 
 
             _ = LoadTaskFromDatabase();
@@ -71,13 +73,13 @@ namespace ToDoJo.ViewModels
             var currentUser = _authenticationService.CurrentUser;
             if (currentUser == null)
             {
-                Debug.WriteLine("AddTask: CurrentUser == null — пользователь не авторизован");
+                _logger.Warn("Attempted to add a task, but CurrentUser == null");
                 return;
             }
 
             if (_context == null)
             {
-                Debug.WriteLine("AddTask: _context == null");
+                _logger.Warn("_context == null when calling AddTask");
                 return;
             }
 
@@ -99,11 +101,11 @@ namespace ToDoJo.ViewModels
                 NewTaskContent = null;
 
                 NoCompleteTask++;
-                // после изменения NewTaskContent, команда AddTaskCommand выполнит NotifyCanExecuteChanged автоматически
+                _logger.Info("Task was added", newTask.DescTask);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Ошибка добавления задачи: {ex}");
+                _logger.Error(ex, "Error adding task");
             }
         }
 
@@ -111,19 +113,19 @@ namespace ToDoJo.ViewModels
         {
             if (_context == null)
             {
-                Debug.WriteLine("LoadTaskFromDatabaseAsync: _context == null");
+                _logger.Warn("_context == null при вызове LoadTaskFromDatabaseAsync");
                 return;
             }
             if (_authenticationService == null)
             {
-                Debug.WriteLine("LoadTaskFromDatabaseAsync: _authenticationService == null");
+                _logger.Warn("_authenticationService == null при вызове LoadTaskFromDatabaseAsync");
                 return;
             }
 
             var userId = _authenticationService.CurrentUser?.Id;
             if (userId == null)
             {
-                Debug.WriteLine("LoadTaskFromDatabaseAsync: CurrentUser == null — пропускаем загрузку");
+                _logger.Warn("CurrentUser == null при вызове LoadTaskFromDatabaseAsync, пропускаем загрузку");
                 return;
             }
 
@@ -142,11 +144,11 @@ namespace ToDoJo.ViewModels
 
                 NoCompleteTask = tasks.Count;
                 CompleteTask = await _context.Tasks.CountAsync(t => t.UserId == userId && t.IsCompleted);
-                Debug.WriteLine($"LoadTaskFromDatabaseAsync: загружено {tasks.Count} задач для user {userId}");
+                _logger.Info($"LoadTaskFromDatabaseAsync: загружено {tasks.Count} задач для user {userId}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"LoadTaskFromDatabaseAsync error: {ex}");
+                _logger.Error(ex, "Ошибка при загрузке задач из БД");
             }
         }
         [RelayCommand]
@@ -164,9 +166,10 @@ namespace ToDoJo.ViewModels
 
                 CompleteTask++;
                 NoCompleteTask--;
+                _logger.Info("Задача {Task} помечена как выполненная", todoTask.DescTask);
             }
             catch (Exception ex) {
-                System.Diagnostics.Debug.WriteLine($"{ex.Message}");
+                _logger.Error(ex, "Ошибка при пометке задачи как выполненной");
             }
         }
 
@@ -184,10 +187,12 @@ namespace ToDoJo.ViewModels
                 TodoTask.Remove(todoTask);
                 if(!todoTask.IsCompleted)
                     NoCompleteTask--;
+
+                _logger.Info("Задача {Task} удалена (IsCompleted={IsCompleted})", todoTask.DescTask, todoTask.IsCompleted);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                _logger.Error(ex, "Ошибка при удалении задачи");
             }
         }
 

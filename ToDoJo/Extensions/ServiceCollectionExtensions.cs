@@ -20,7 +20,7 @@ namespace ToDoJo.Extensions
 
             collection.AddSingleton<INavigationService, NavigationService>();
             collection.AddSingleton<IAuthenticationService, AuthenticationService>();
-
+            collection.AddSingleton<ILoggerService, LoggerService>();
 
             collection.AddTransient<MainWindowViewModel>();
             collection.AddTransient<LoginViewModel>();

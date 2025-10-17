@@ -11,9 +11,9 @@ namespace ToDoJo.ViewModels
 {
     public partial class ProfileViewModel : NavigateForViewModel
     {
-        public ProfileViewModel(INavigationService navigationService, IAuthenticationService authenticationService) 
-            : base(navigationService, authenticationService){}
+        public ProfileViewModel(INavigationService navigationService, IAuthenticationService authenticationService, ILoggerService loggerService) 
+            : base(navigationService, authenticationService, loggerService){}
 
-        public ProfileViewModel() : this(null!, null!) { }
+        public ProfileViewModel() : this(null!, null!, null!) { }
     }
 }

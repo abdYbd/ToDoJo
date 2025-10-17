@@ -14,10 +14,16 @@
 
   <ItemGroup>
     <AvaloniaXaml Remove="App.axaml" />
+    <AvaloniaXaml Remove="Views\ProfileView.axaml" />
+    <AvaloniaXaml Remove="Views\SamuraiView.axaml" />
+    <AvaloniaXaml Remove="Views\ToDoView.axaml" />
   </ItemGroup>
 
   <ItemGroup>
     <AvaloniaResource Include="App.axaml" />
+    <AvaloniaResource Include="Views\ProfileView.axaml" />
+    <AvaloniaResource Include="Views\SamuraiView.axaml" />
+    <AvaloniaResource Include="Views\ToDoView.axaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,5 +44,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="Serilog" Version="4.3.0" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
 </Project>

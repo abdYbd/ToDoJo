@@ -24,24 +24,31 @@ namespace ToDoJo.ViewModels
         private bool _isAnimating = false;
 
         private readonly List<Bitmap> _animationFrames = new();
+        private readonly ILoggerService _logger;
         private int _currentFrameIndex = 0;
         private int _dotCount = 0;
         private bool _samuraiLoopRunning = false;
         private bool _loadingLoopRunning = false;
 
-        public SamuraiViewModel(INavigationService navigationService, IAuthenticationService authenticationService)
-            : base(navigationService, authenticationService)
+        public SamuraiViewModel(INavigationService navigationService,
+                              IAuthenticationService authenticationService,
+                              ILoggerService loggerService)
+            : base(navigationService, authenticationService, loggerService)
         {
+            _logger = loggerService;
+            _logger.Info("SamuraiViewModel initialized");
             LoadFrames();
             StartAnimation();
         }
 
-        public SamuraiViewModel() : this(null!, null!) { }
+        public SamuraiViewModel() : this(null!, null!, null!) { }
 
         private async void LoadFrames()
         {
             try
             {
+                _logger.Info("Loading samurai animation frames");
+
                 var framePaths = new List<string>()
                 {
                     "/Assets/Samurai-idle1.png",
@@ -52,27 +59,35 @@ namespace ToDoJo.ViewModels
                     "/Assets/Samurai-idle6.png"
                 };
 
+                int loadedFrames = 0;
                 foreach (var path in framePaths)
                 {
                     var bitmap = await LoadBitmap(path);
                     if (bitmap != null)
                     {
                         _animationFrames.Add(bitmap);
+                        loadedFrames++;
                     }
                 }
 
-                // Устанавливаем первый кадр
+                _logger.Info("Loaded {LoadedFrames}/{TotalFrames} animation frames", loadedFrames, framePaths.Count);
+
                 if (_animationFrames.Count > 0)
                 {
                     await Dispatcher.UIThread.InvokeAsync(() =>
                     {
                         CurrentFrame = _animationFrames[0];
                     });
+                    _logger.Info("Set initial animation frame");
+                }
+                else
+                {
+                    _logger.Warn("No animation frames were loaded successfully");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading frames: {ex.Message}");
+                _logger.Error(ex, "Failed to load animation frames");
             }
         }
 
@@ -80,29 +95,28 @@ namespace ToDoJo.ViewModels
         {
             try
             {
-                // Убираем начальный слэш для использования в Uri
                 path = path.TrimStart('/');
                 var uri = new Uri($"avares://ToDoJo/{path}");
 
-                // Используем AssetLoader.Open для загрузки ресурса
                 var stream = AssetLoader.Open(uri);
+                _logger.Info("Successfully loaded bitmap: {Path}", path);
                 return new Bitmap(stream);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading {path}: {ex.Message}");
+                _logger.Error(ex, "Failed to load bitmap from resources: {Path}", path);
 
-                // Пробуем загрузить из файловой системы как fallback
                 try
                 {
                     if (System.IO.File.Exists(path))
                     {
+                        _logger.Info("Trying filesystem fallback for: {Path}", path);
                         return new Bitmap(path);
                     }
                 }
                 catch (Exception ex2)
                 {
-                    Console.WriteLine($"Also failed to load from filesystem: {ex2.Message}");
+                    _logger.Error(ex2, "Also failed to load from filesystem: {Path}", path);
                 }
 
                 return null;
@@ -111,8 +125,14 @@ namespace ToDoJo.ViewModels
 
         private async Task SamuraiAnimationLoop()
         {
-            if (_samuraiLoopRunning || _animationFrames.Count == 0) return;
+            if (_samuraiLoopRunning || _animationFrames.Count == 0)
+            {
+                _logger.Info("Samurai animation loop not started - already running or no frames");
+                return;
+            }
+
             _samuraiLoopRunning = true;
+            _logger.Info("Samurai animation loop started");
 
             try
             {
@@ -136,13 +156,20 @@ namespace ToDoJo.ViewModels
             finally
             {
                 _samuraiLoopRunning = false;
+                _logger.Info("Samurai animation loop stopped");
             }
         }
 
         private async Task LoadingAnimationLoop()
         {
-            if (_loadingLoopRunning) return;
+            if (_loadingLoopRunning)
+            {
+                _logger.Info("Loading animation loop already running");
+                return;
+            }
+
             _loadingLoopRunning = true;
+            _logger.Info("Loading animation loop started");
 
             try
             {
@@ -162,37 +189,30 @@ namespace ToDoJo.ViewModels
             finally
             {
                 _loadingLoopRunning = false;
+                _logger.Info("Loading animation loop stopped");
             }
         }
 
         [RelayCommand]
         private void StopAnimation()
         {
+            _logger.Info("Stopping samurai animation");
             IsAnimating = false;
         }
 
         [RelayCommand]
         private void StartAnimation()
         {
-            if (IsAnimating || _animationFrames.Count == 0) return;
+            if (IsAnimating || _animationFrames.Count == 0)
+            {
+                _logger.Info("Animation not started - already running or no frames available");
+                return;
+            }
 
+            _logger.Info("Starting samurai animation");
             IsAnimating = true;
             _ = SamuraiAnimationLoop();
             _ = LoadingAnimationLoop();
         }
-
-        //protected override void OnDeactivated()
-        //{
-        //    IsAnimating = false;
-
-        //    // Очищаем ресурсы
-        //    foreach (var frame in _animationFrames)
-        //    {
-        //        frame.Dispose();
-        //    }
-        //    _animationFrames.Clear();
-
-        //    base.OnDeactivated();
-        //}
     }
 }
